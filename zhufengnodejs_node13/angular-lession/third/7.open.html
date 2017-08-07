@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <style>
+        .title{width: 300px;height: 50px;background: orangered}
+        .content{width: 300px;height: 200px;background: #e4e4e4}
+    </style>
+</head>
+<body>
+<div style="width: 300px;float: left">
+<group>
+    <opener title="section1">content1</opener>
+    <opener title="section2">content2</opener>
+    <opener title="section3">content3</opener>
+</group>
+</div>
+<div style="width: 300px;float: left">
+<group>
+    <opener title="100">100</opener>
+    <opener title="110">110</opener>
+</group>
+</div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    //平级的指令 不能实现交互
+    app.directive('group',function () {
+        return {
+            controller:function ($scope) {
+                $scope.arr = [];//保存所有的opener的scope
+                this.collect = function (s) {
+                    $scope.arr.push(s);//保存所有传递过来的作用域
+                };
+                this.tell = function (s) {
+                    //除了s外的scope里的flag值都要为false
+                    $scope.arr = $scope.arr.map(function (item) {
+                        if(item!=s){ //除了当前那个 其他的flag都为false
+                            item.flag = false;
+                        }
+                        return item;
+                    });
+                };
+            },
+            scope:true //产生独立作用域 和其他group不产生关系
+        }
+    });
+    app.directive('opener',function () {
+        return {
+            require:'^?group',//先找自己的，如果自己找不到 向上级查找，找不到则报错,?表示向上找,找不到不报错
+            templateUrl:'tmpl/open.html',
+            transclude:true,
+            link:function (scope,element,attrs,groupCtrl) {//scope代表当前opener指令的作用域
+                scope.flag = false;
+                groupCtrl.collect(scope);
+                scope.toggle = function () {
+                    //让自己的状态取反，让父亲关闭掉其他的
+                    scope.flag =!scope.flag;
+                    groupCtrl.tell(scope);//告诉父亲当前点击的是谁 让父亲关掉其他人
+                }
+            },
+            scope:{
+                title:'@',
+            }
+        }
+    })
+</script>
+</body>
+</html>

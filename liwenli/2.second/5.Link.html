@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Scope</title>
+</head>
+<body>
+
+<zf-div  ></zf-div>
+<div zf-div ></div>
+<div class="zf-div" ></div>
+ <!-- 独立可复用 -->
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script type="text/javascript">
+    var app = angular.module('appModule', []);
+    app.run(function ($rootScope){ // angular应用初始加载程序后 最先执行的
+        $rootScope.name = 'root';
+    });
+//    指令不依赖控制器
+    app.directive('zfDiv', function () {
+//        指令默认不产生作用域
+          return {
+               restrict: 'EAMC',
+               replace: true,
+               template:'<div class="links" name="angular">我是一个模板</div>',
+              /**
+               * Link 函数： 链接作用域和DOM(视图)
+               * @param scope 是指令所在的当前作用域
+               * @param element 当前指令所在的元素 并且是一个jQuery对象
+               * @param attrs  指令所在元素属性集合
+               */
+               link: function (scope,element,attrs) { // 我们在插入指令时执行的
+               }
+          }
+    })
+</script>
+</body>
+</html>

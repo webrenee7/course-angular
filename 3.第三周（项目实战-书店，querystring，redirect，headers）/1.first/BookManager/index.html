@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="cartCtrl">
+<div class="container">
+    <div>
+        <row>
+            <table class="table table-bordered">
+                <tr>
+                    <th>书名</th>
+                    <th>价格</th>
+                    <th>操作</th>
+                </tr>
+                <tr ng-repeat="book in books track by $index">
+                    <td>{{book.name}}</td>
+                    <td>{{book.price}}</td>
+                    <td><button class="btn btn-danger" ng-click="remove(book)">删除</button></td>
+                </tr>
+            </table>
+            <div class="form">
+                <div class="form-group">
+                    <label class="control-label">书名：</label>
+                    <input type="text" class="form-control" id="bookname" ng-model="book.name">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">价格：</label>
+                    <input type="text" class="form-control" id="bookprice" ng-model="book.price">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" ng-click="add()">添加</button>
+                </div>
+            </div>
+        </row>
+    </div>
+</div>
+
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/angular-resource/angular-resource.js"></script>
+<script>
+    var app=angular.module('appModule',['ngResource']);
+    app.factory('Books',['$resource',function ($resource) {
+        return $resource("/book/:id",null,{
+            update:{//少了一个修改方法，要手动增加
+                method:'PUT'
+            }
+        });
+    }]);
+    app.controller('cartCtrl',['$scope','Books',function ($scope,Books) {
+        /*
+        //制造假数据
+        $scope.books=[
+            {name:'angular权威指南',price:30,id:1},
+            {name:'react全栈技术',price:40,id:2},
+            {name:'react权威指南',price:70,id:3}
+        ];*/
+        //查询  返回查询内容
+        //删除  返回空对象
+        //修改  返回修改的那一项
+        //添加  返回添加的那一项  作业  Books.save()  当完成后在$scope.books push新增的内容
+
+        //将返回的结果挂载载作用域上
+        $scope.books=Books.query();  //   book/
+        $scope.remove=function (book) {
+            //调用get save query可以通过.$promise拿到promise对象可以调用then方法
+            Books.remove({id:book.id}).$promise.then(function () {
+                /*$scope.books=Books.query();//发送两次请求，性能不好*/
+                //后台删除成功后，再删除前台的数据
+                $scope.books=$scope.books.filter(function (item) {
+                    return item.id!=book.id
+                })
+            });
+        };
+        $scope.add=function () {
+            /*var data={id:($scope.books.length==0?1:$scope.books[$scope.books.length-1].id+1),name:bookname.value,price:bookprice.value};
+            Books.save(data).$promise.then(function () {
+                $scope.books.push(data);
+            });*/
+            Books.save($scope.book).$promise.then(function (res) {
+                $scope.books.push(res);
+                $scope.book={};
+            });
+        }
+    }]);
+</script>
+</body>
+</html>

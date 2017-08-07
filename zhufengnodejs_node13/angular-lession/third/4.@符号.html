@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <panel t="这是reactJs" qq="name">这是内容2</panel>
+            <panel t="这是angularjs" qq="name" >这是内容1</panel>
+        </div>
+    </div>
+</div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+     var app = angular.module('appModule',[]);
+     app.run(function ($rootScope) {
+         $rootScope.name='zfpx';
+     });
+     app.directive('panel',function () {
+         return {
+            restrict:'E',
+            transclude:true,
+            template:'<div>{{title}} {{name}}</div>',
+            scope:{
+                //因为完全隔离了作用域，所有为了在作用域中的模板能取到数据，必须在指令中声明数据
+                name:'=qq',//这里取得是qq对应的字符串所代表的变量
+                title:'@t' //scope.title = attrs.t;如果引用的名字和当前名字相同则可以省略@后面的
+            },//这里代表的是当前作用域
+         }
+     });
+</script>
+</body>
+</html>

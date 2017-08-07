@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        [ng-cloak]{
+            display: none;
+        }
+        .red{
+            background: #00b3ee;
+        }
+        .green{
+            background: #afd9ee;
+        }
+    </style>
+</head>
+<body ng-controller="cartCtrl">
+<!--让页面居中 栅格化布局 12列组成-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <!--danger waring primary info default success -->
+                <caption class="h3 text-warning">购物车</caption>
+                <tr>
+                    <th class="text-center">商品名称</th>
+                    <th class="text-center" ng-click="flag=!flag">商品价格</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                <tr class="text-center" ng-repeat="item in arrs | orderBy:'price':flag" ng-cloak ng-class-odd="'red'"  ng-class-even="'green'">
+                    <td>{{item.name}}</td>
+                    <td>{{item.price | currency:'￥'}}</td>
+                    <td>
+                        <button class="btn btn-danger btn-xs" ng-click="removeOne(item)">删除</button>
+                    </td>
+                </tr>
+                <tr ng-hide="arrs.length">
+                    <td colspan="3">暂无数据</td>
+                </tr>
+                <tr ng-show="arrs.length">
+                    <td colspan="3">
+                        <button class="btn btn-danger" ng-click="removeAll()">删除全部</button>
+                        总价：{{total()}}
+                        <!--[{name:'打一折',val:0.1},{name:'打五折',val:0.5}]-->
+                        <select ng-model="co">
+                            <!--当co的值和val值相等时才会选择某一个-->
+                            <option value="{{c.val}}" ng-repeat="c in coast">{{c.name}}</option>
+                        </select>
+                        折后价格： {{total()*co}}
+                    </td>
+                </tr>
+            </table>
+            <form role="form">
+                <div class="form-group">
+                    <label for="productName" class="control-label">商品名称</label>
+                    <input type="text" class="form-control" id="productName" placeholder="请输入标题" ng-model="product.name">
+                </div>
+                <div class="form-group">
+                    <label for="productPrice" class="control-label">商品价格</label>
+                    <input type="text" class="form-control" id="productPrice" placeholder="请输入价格" ng-model="product.price">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" ng-click="add()">添加</button>
+                    <button type="reset" class="btn btn-warning" ng-click="reset()">重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('zfModule', []);
+    app.controller("cartCtrl", ["$scope", "$rootScope", function ($scope) {
+        $scope.arrs = [{name: "iphone", price: 1300},{name: "iphone", price: 888},{name: "iphone", price: 999},{name: "iphone", price: 2888},{name: "iphone", price: 1090},{name: "iphone", price: 20000},{name: "iphone", price: 300}];
+        //偶数行 是绿色  奇数行是红色
+        $scope.co = '0.5';
+        $scope.removeOne = function (product) {
+            //数组的filter 返回true表示留下 返回false 删除，返回一个新的数组
+            $scope.arrs = $scope.arrs.filter(function (item) {
+                return item != product;
+            });
+        };
+        $scope.removeAll = function () {
+            $scope.arrs = [];
+        };
+        $scope.add = function () {
+            //这里直接将product放到数组中 ，之后我们再次更改product对象数组里的product也会更改
+            if($scope.product.name &&$scope.product.price ){
+                $scope.arrs.unshift($scope.product);
+                $scope.product = {};
+            }
+        };
+        $scope.reset = function () {
+            $scope.product = {};
+        };
+
+        //如果当前作用域下有任何一个值发生变化就会触发total
+        $scope.total = function () {
+            var total = 0;
+            $scope.arrs.forEach(function (item) {
+                total+=item.price;
+            });
+            return total;
+        };
+        $scope.coast = [{name:'打一折',val:0.1},{name:'打五折',val:0.5}]
+
+        //ng-show 是简单的控制样式  ng-if 如果为false则会移除dom
+
+        //如果频繁切换显示或者隐藏用ng-show/ng-hide
+        //ng-if如果定下来不再展示 或者判断数据是否存在用ng-if(会产生一个作用域)
+        //ng-if如果第一层不满足条件里面的代码不会继续执行
+    }]);
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body ng-controller="myCtrl">
+<!--ng-model watch如果数据发生变化 apply去改变视图 -->
+<input type="text" ng-model="count"><br>
+单价 {{price}} <br>
+邮费 {{post}} <br>
+<!--ng-model的原理 将所有的数据放到一个数组里 先存一个旧值，当某一个值发生变化后，拿新值和旧值比较 如果发生变化 刷新视图 webWorker -->
+总价 {{total()+post}} <br>
+<!--满百包邮 满100邮费变为0-->
+<script src="node_modules/angular/angular.js"></script>
+<script>
+     var app = angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope',function ($scope) {
+        $scope.count = 10;
+        $scope.price = 20;
+        $scope.post = 8;
+        $scope.total = function total() {
+            return  $scope.count*$scope.price
+        };
+        //监控总价执行后的结果，如果结果变化会传递一个newVal
+        $scope.$watch($scope.total,function (newVal,oldVal) {
+            //当总价大于100 则让邮费为0
+            $scope.post = newVal>=100?0:8
+        });
+        //只要作用域上name变量发生变化 就会触发后面的回调函数
+        /*$scope.$watch('name',function (newVal,oldVal) {
+            $scope.age = newVal;
+        });*/
+        /*$scope.$watch(function () {
+            //只要页面有数据变化就会触发这个函数
+            return $scope.name
+        },function (newVal,oldVal) {
+            console.log(newVal);
+        });*/
+
+
+        /*$scope.fn = function () {
+            console.log($scope.name);
+        }*/
+    }])
+</script>
+</body>
+</html>

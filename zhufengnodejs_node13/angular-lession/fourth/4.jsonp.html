@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<div class="container">
+    <p class="h3 text-danger">百度搜索</p>
+    <input type="text" class="form-control" ng-keyup="search($event)" ng-model="query" ng-keydown="down($event)">
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="item in lists track by $index" ng-class="{active:index==$index}">{{item}}</li>
+        <!--index是当前按上下键后 选择数组中的某一个索引-->
+    </ul>
+</div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule', []);
+    //angular提供给我们一个方法$http angular中的ajax用法同jquery
+    app.controller('myCtrl', ['$scope', '$http', '$sce', function ($scope, $http, $sce) {
+        //百度接口要设置callback 并且callback名字要是cb
+        $scope.lists = [];
+        //声明一个选中的索引
+        $scope.index = -1;
+        //down触发的默认事件
+        $scope.down = function (e) {
+            var keyCode  = e.keyCode; //当按下上键时阻止默认事件
+            if(keyCode == 38){
+                e.preventDefault();
+            }
+        };
+        var timer = '';
+        $scope.search = function (e) {
+            var keyCode = e.keyCode;
+            if(keyCode == 38||keyCode == 40){
+                if (keyCode == 38) { //上
+                    $scope.index-=1;
+                    if($scope.index==-2){ //首次按上键的问题
+                        $scope.index = $scope.lists.length-1;
+                        $scope.query = $scope.temp;
+                    }
+                    if($scope.index == -1 || $scope.index==-2){ //当现在在0的时候 按上-1 到最后面 并且将临时值赋予给输入框
+                        $scope.index = $scope.lists.length;
+                        $scope.query = $scope.temp;
+                        return;
+                    }
+                }
+                if (keyCode == 40) { //下
+                    $scope.index+=1;
+                    if($scope.index == $scope.lists.length){ //当到了最后一个时候回到初始值
+                        $scope.index = -1;
+                        $scope.query = $scope.temp;
+                        return;
+                    }
+                }
+                clearTimeout(timer);
+                //按上下键时 等待1s跳转页面
+                timer=setTimeout(function () {
+                   window.open('https://www.baidu.com/s?wd='+$scope.query)
+                },1000);
+                //给输入框赋予一个选择的值
+                return $scope.query = $scope.lists[$scope.index];
+            }
+            $http.jsonp(
+                    $sce.trustAsResourceUrl('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=' + $scope.query),
+                    {jsonpCallbackParam: 'cb'}
+            ).then(function (res) { //成功的回调
+                $scope.temp = $scope.query;//保存初始的根据什么搜索的
+                $scope.lists = res.data.s;
+            });
+        };
+    }]);
+</script>
+</body>
+</html>

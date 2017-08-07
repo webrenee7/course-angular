@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body>
+<zf-text></zf-text>
+<div zf-text></div>
+<div class="zf-text"></div>
+<!-- directive:zf-text -->
+<!--指令分为两种 内置的指令例如ng-model ng-bind ng-show ng-...
+    自定义的指令 起名字不能以ng-开头
+    指令存在的形式 <hello></hello> <div class="hello"></div>
+     directive:hello  <div hello></div>
+     装饰型指令  组件式
+-->
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    //一切从模块开始 指令是不依赖于控制的 zf-text
+    var app = angular.module('zfModule',[]);
+    //param1 指令的名字  param2 定义
+    app.directive('zfText',function () {
+        return {
+            //限制使用范围
+            //E element  <zf-text></zf-text>
+            //C class <div class="zf-text"></div>
+            //M comment <!-- directive:zf-text -->
+            //A attribute <div zf-text></div>
+            //默认AE
+            restrict:'ACM',
+            replace:true,//当内容插入到标签后 指令标签会被移除掉
+            //模板中的内容 必须要有一个根节点
+            template:`<div>
+                <h1>hello zfpx</h1>
+                <h2>你好</h2>
+            </div>`     //模板字符串
+        }
+    })
+</script>
+</body>
+</html>

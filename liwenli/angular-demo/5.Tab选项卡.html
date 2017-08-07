@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app>
+  <head>
+    <meta charset="utf-8">
+    <title>ng-show/ng-hide Tab选项卡</title>
+    <style>
+      [ng-cloak] {
+        display: none;
+      }
+    </style>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+  </head>
+  <body>
+  <div class="container" ng-cloak>
+  <div class="bs-example">
+    <ul class="nav nav-tabs nav-pills text-center" role="tablist" ng-init="flag='home'">
+      <li role="presentation"  ng-click="flag='home'" ng-class="{active:flag == 'home'}"><a href="#">Home</a></li>
+      <li role="presentation" ng-click="flag='profile'" ng-class="{active:flag == 'profile'}"><a href="#">Profile</a></li>
+      <li role="presentation" ng-click="flag='message'" ng-class="{active:flag == 'message'}"><a href="#">Messages</a></li>
+    </ul>
+  </div>
+      <div>
+        <div class="panel panel-default" ng-show="flag == 'home'">
+          <div class="panel-body">Home</div>
+        </div>
+        <div class="panel panel-default" ng-show="flag == 'profile'">
+          <div class="panel-body">Profile</div>
+        </div>
+        <div class="panel panel-default" ng-show="flag == 'message'">
+          <div class="panel-body">Message</div>
+        </div>
+      </div>
+  </div>
+    <script type="text/javascript" src='../node_modules/angular/angular.js'></script>
+    <script type="text/javascript">
+    </script>
+  </body>
+</html>

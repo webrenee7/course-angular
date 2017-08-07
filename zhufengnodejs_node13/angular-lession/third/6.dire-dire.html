@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body>
+<!--love-cry 依赖于girl-->
+<girl love-shopping love-cry>女孩</girl>
+<script src="./node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    app.directive('girl',function () {
+        return {
+            controller:function ($scope) {//$scope代表当前girl的作用域
+                $scope.arr = [];//父亲用一个容器来存储传进来的内容
+                this.add = function (kind) { //在控制器上增加一个add方法
+                    $scope.arr.push(kind);
+                }
+            },
+            link:function (scope,element,attrs) {
+                element.on('click',function () {
+                    console.log(scope.arr);
+                });
+            }
+        }
+    });
+    app.directive('loveCry',function () {
+        return {
+            require:'girl',
+            //第四个参数是依赖于girl的控制器实例化后注入进来的
+            link:function (scope,element,attrs,girlCtrl) { //当指令执行时会调用link函数
+                girlCtrl.add('loveCry');
+            }
+        }
+    });
+    app.directive('loveShopping',function () {
+        return {
+            require:'girl',
+            link:function (scope,element,attrs,girlCtrl) {
+                girlCtrl.add('loveShopping');
+            }
+        }
+    });
+</script>
+</body>
+</html>

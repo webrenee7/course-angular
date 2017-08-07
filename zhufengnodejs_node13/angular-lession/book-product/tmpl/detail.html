@@ -1,0 +1,22 @@
+<!--书的名字  书的价格 书的封面-->
+<div>
+    <div class="panel panel-success text-center" >
+        <div class="panel-heading">
+            <span ng-show="flag">{{book.bookName}}</span>
+            <input type="text" ng-model="tmpl.bookName" ng-hide="flag">
+        </div>
+        <div class="panel-body">
+            <!--遇到图片使用ng-src-->
+            <img ng-src="{{book.bookCover}}" alt="" style="width:200px;height: 250px">
+        </div>
+        <div class="panel-footer">
+            <!--  /detail/1-->
+            价格：<span ng-show="flag">{{book.bookPrice}}</span>
+            <input type="text" ng-model="tmpl.bookPrice" ng-hide="flag">
+            <button class="btn btn-warning" ng-show="flag" ng-click="changeState()">修改</button>
+            <button class="btn btn-danger" ng-click="remove()" ng-show="flag">删除</button>
+            <button class="btn-success btn" ng-hide="flag" ng-click="update()">确认</button>
+            <button class="btn-default btn" ng-hide="flag" ng-click="cancel()">取消</button>
+        </div>
+    </div>
+</div>

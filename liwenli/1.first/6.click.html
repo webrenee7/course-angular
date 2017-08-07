@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app="appMode">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div ng-controller="appCtrl">
+    <!-- 绑定事件（不需）ng-事件名 -->
+    <button ng-click="text1()">老谭酸菜</button>
+    <button ng-mouseenter="text1($event)">老谭酸菜</button>
+</div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+    // 一切都从模块开始
+    var app = angular.module('appMode',[]);
+     app.controller('appCtrl', function($scope){
+         $scope.text1 = function (e){
+             e = e || window.event;
+//             console.log(e.target.innerHTML);
+             alert(e.target.innerHTML)
+         }
+     });
+</script>
+</body>
+</html>

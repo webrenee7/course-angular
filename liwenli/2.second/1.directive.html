@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- 标签形式展现 -->
+标签：<zf-dir>我是一个内容</zf-dir>
+<!-- 属性形式展现 -->
+属性：<div zf-dir>我是一个内容</div>
+<!-- 注释形式展现 -->
+注释：<!-- directive:zf-dir -->
+<!-- 样式名形式展现 -->
+样式名：<div class="zf-dir">我是一个内容</div>
+
+
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script type="text/javascript">
+      var app = angular.module('appModule', []);
+//      如果是驼峰式命名 使用时要先转化为小写 并在第二个单词前边加个‘—’
+      app.directive('zfDir', function () {
+             return {
+                  replace: true, // 替换掉指令所在容器本身 当replace为true的时候模板顶级元素只能有一个
+
+                  restrict: 'EAMC', // 限制显示形式 默认是EA  E element(元素) A attribute（属性）
+                  transclude: true, // 保留指令容器里面内容 并通过ng-transclude 显示位置
+                     //  M comment(注释) C class(样式名)
+                  template: '<div>我是一个指令333 <h3 ng-transclude></h3></div>'
+             }
+      })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<!--内置过滤器 自定义过滤器-->
+<!--{{'aaabcccss' | uppercase}} <br>-->
+<!--{{'ABBCCCASD' | lowercase}} <br>-->
+<!--{{'1000' | currency:'€'}} <br>-->
+<!--{{ 1486267313587 | date:'yy-dd日 hh:mm:ss' }}-->
+<!--<p>{{'asdasdasdasd' | limitTo:5}}</p>-->
+<!--{{1123123123.123123123 | number:2}}-->
+<!--<pre>{{ {name:1,age:1} | json }}</pre>-->
+<!--orderBy 排序-->
+<!--默认ng-model绑定的数据 视图发生变化后 立即刷新数据-->
+<!--{debounce:1000} -->
+<input type="text" ng-model="query" ng-model-options="{updateOn:'blur'}">
+<table class="table table-bordered table-hover">
+    <tr class="text-success">
+       <th>姓名</th>
+       <th ng-click="language='math';flag=!flag">数学</th>
+       <th ng-click="language='chinese';flag=!flag">语文</th>
+       <th ng-click="language='english';flag=!flag">英语</th>
+    </tr>
+    <!--根据某一项中的math属性进行排序  是否倒序-->
+    <tr ng-repeat="arr in arrs | orderBy:language:flag | filter:{chinese:query}   track by $index">
+        <td>{{arr.name}}</td>
+        <td>{{arr.math}}</td>
+        <td>{{arr.chinese}}</td>
+        <td>{{arr.english}}</td>
+    </tr>
+</table>
+<!--<marquee behavior="" direction="">1231232</marquee>-->
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope',function ($scope) {
+        $scope.arrs = [{name:'张三',chinese:100,math:90,english:66},{name:'李四',chinese:65,math:78,english:88},{name:'王五',chinese:20,math:80,english:34},{name:'赵六',chinese:30,math:100,english:108}]
+    }]);
+</script>
+</body>
+</html>

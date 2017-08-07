@@ -1,0 +1,6 @@
+<div class="panel panel-info">
+    <div class="panel-heading">{{title}}</div>
+    <!--会自动将指令保留的内容 放到带有ng-transclude的属性的标签中-->
+    <div class="panel-body">你好:<span ng-transclude></span></div>
+    <div class="panel-footer">{{author}} <button ng-click="say({t:title})">点我说标题</button></div>
+</div>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        [ng-cloak] {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<div ng-controller="appCtrl" ng-cloak>
+    <div class="container">
+        <!-- table -->
+        <table class="table table-bordered">
+            <tr>
+                <!-- 将全选按钮的值 双向绑定给当前作用域的isAll 由它的值来控制是否为选中 （true为选中 false 为未选中）-->
+                <th><input type="checkbox" ng-model="isAll" ng-click="isAllSelect()">全选/全不选</th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-repeat="item in products">
+                <!-- 将每一个商品的勾选框的值 双向绑定给 item.isSelect 由它的值来控制是否为选中 （true为选中 false 为未选中）-->
+                <td><input type="checkbox" ng-model="item.isSelect" ng-click="itemSelect()"></td>
+                <td>{{item.name}}</td>
+                <td>{{item.price | currency:'￥'}}</td>
+                <!-- 数量为可编辑 -->
+                <td>
+                    <!-- 当数量减一的时候 如果大于零再减 否则 一直为0 -->
+                    <button class="btn btn-primary" ng-click="item.count= item.count>0?item.count-1:0">-</button>
+                    <input type="text" readonly class="text-center" ng-model="item.count">
+                    <button class="btn btn-primary" ng-click="item.count = item.count+1">+</button>
+                </td>
+                <td>{{item.count * item.price | currency:'￥'}}</td>
+                <td>
+                    <button class="btn btn-danger" ng-click="remove(item)">删除</button>
+                </td>
+            </tr>
+            <!-- 合计购买金额 合计购买数量  清空购物车 -->
+            <tr>
+                <td colspan="2" class="text-center">合计购买金额：{{totals().total | currency:'￥'}}</td>
+                <td colspan="2" class="text-center">合计购买数量：{{totals().number}}</td>
+                <td colspan="2" class="text-center">
+                    <button class="btn btn-danger" ng-click="removeAll()">删除选中商品</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule', []);
+    app.controller('appCtrl', function ($scope, $timeout) {
+//        商品初始数据
+        $scope.products = [
+            {isSelect: true, name: 'iphone8', price: '10000', count: 5},
+            {isSelect: false, name: 'iphone7', price: '3000', count: 5},
+            {isSelect: false, name: 'iphone6', price: '2000', count: 5},
+            {isSelect: true, name: 'iphone5s', price: '5000', count: 5}
+        ];
+//         全选/全不选 监听事件
+        $scope.isAllSelect = function () {
+//          遍历商品数据 让isSelect值和 isAll 一致
+// isAll等于 view改变viewModel  isSelect viewModel改变view
+            console.log($scope.isAll);
+            angular.forEach($scope.products, function (item) {
+                item.isSelect = $scope.isAll;
+            })
+        };
+//        合计购买金额
+        $scope.totals = function () {
+            var total = 0; // 累加小计的
+            var number = 0; // 累加商品数量
+//            遍历每一个商品计算出小计 并且累加
+            angular.forEach($scope.products, function (item) {
+                if(item.isSelect) { // 只累加选中商品小计金额
+                    total += item.count * item.price;
+                    number +=  item.count * 1;
+                }
+            });
+            return {total: total, number: number};
+        };
+        // 根据每条商品选中状态来决定 全选状态
+        $scope.itemSelect = function () {
+            //  如果查找到未选中内一项 isAllSelect有返回值（item）否则undefined
+          var isAllSelect =  $scope.products.find(function (item) {
+//              item.isSelect == false
+                  return  !item.isSelect;  // 查找匹配项 并返回
+            });
+            //  再来决定isAll是否全选
+            $scope.isAll =  !isAllSelect? true : false;
+        };
+        $scope.remove = function (product){
+                $scope.products =  $scope.products.filter(function (item) {
+                      return item != product
+                })
+        };
+        // 删除所勾选项
+        $scope.removeAll = function () {
+            $scope.products =  $scope.products.filter(function (item) {
+//                  return item.isSelect == false;
+                return !item.isSelect;
+            })
+        }
+    });
+
+</script>
+</body>
+</html>

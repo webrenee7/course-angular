@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .back{background: greenyellow}
+        .backcolor{background: purple}
+        .size{font-size: 65px;}
+    </style>
+</head>
+<body ng-controller="myCtrl">
+<!--class 和ng-class不冲突 动态的永远比静态的优先级高-->
+<div class="back" ng-class="{backcolor:true,size:true}" ng-style="{background:'red',fontSize:'100px'}">hello angular baby</div>
+
+<div ng-class="{true:'backcolor',false:'back'}[flag]">根据flag判断</div>
+<!--根据属性值判断是否生效-->
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope',function ($scope) {
+        $scope.flag = true
+    }])
+</script>
+</body>
+</html>

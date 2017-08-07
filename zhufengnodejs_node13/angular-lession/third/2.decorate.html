@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <style>
+        div{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: red;
+            top:0;
+            left:0;
+        }
+        div+ div{
+            background: yellow;
+        }
+        div+div+div{
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<!--装饰型一般用restrict:A-->
+<!--<div red>你好 angular</div>-->
+<div drag class="drag">当前div可以拖动</div>
+<div drag class="drag">当前div可以拖动</div>
+<div drag class="drag">当前div可以拖动</div>
+<!--jquery放在前面 angular发现全局对象中有$ 就不在加载自己的jquery了-->
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('zfModule',[]);
+    //默认指令是不会产生作用域的
+    app.directive('drag',function () {
+        return {
+            restrict:'A',
+            link:function (scope,element) {
+                //在当前元素下 按下鼠标
+                element.on('mousedown',function (e) {
+                    //求当前盒子距离鼠标的位置的距离
+                    var disX = e.pageX - $(this).offset().left;
+                    var disY = e.pageY - $(this).offset().top;
+                    //给文档绑定鼠标移动，防止失去焦点
+                    $(document).on('mousemove',function (e) {
+                        var L =  e.pageX - disX;
+                        var T =  e.pageY - disY;
+                        element.css({top:T,left:L});
+                    });
+                    //当鼠标抬起后 移除up和move事件
+                    $(document).on('mouseup',function () {
+                        $(document).off();
+                    });
+                    e.preventDefault();
+                });
+            }
+        }
+    });
+    app.directive('red',function () {
+        return {
+            restrict:'A',
+            link:function ($scope,element,attrs) {//链接函数 链接作用域和视图的
+                //scope 代表当前指令所在的作用域。
+                //$scope.aa = 100;
+                //element 代表的是当前指令所在的那个元素 并且是jq对象
+                //angular.element包装过的对象
+                element.css({border:'1px solid red',fontSize:80});
+            }
+        }
+    })
+</script>
+</body>
+</html>

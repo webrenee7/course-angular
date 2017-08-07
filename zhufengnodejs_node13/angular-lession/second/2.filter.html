@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body ng-controller="myCtrl" >
+{{1486438945935 | mydate}}
+{{10022000 | currency:'zf':'zf'}}
+{{str}}
+<div ng-bind-html="str | asHtml"></div>
+<script src="node_modules/angular/angular.js"></script>
+<script >
+    var app = angular.module('appModule');
+    app.filter('asHtml',function ($sce) {
+        return function (data) {
+            return $sce.trustAsHtml(data);
+        }
+    });
+    app.controller('myCtrl',function ($scope) {
+        $scope.str='<h1>hello zf</h1>';
+        //$scope.str = $sce.trustAsHtml('<h1>hello zf</h1>');
+    });
+    app.filter('mydate',function () {
+        return function (data) {
+            var d = new Date(data);
+            return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'
+        }
+    });
+    app.filter('currency',function () {
+        return function (data,param,param2) {
+            if(typeof param=='undefined'){
+                return 'jw'+data
+            }else{
+                return param+data+param2
+            }
+        };
+    });
+</script>
+</body>
+</html>

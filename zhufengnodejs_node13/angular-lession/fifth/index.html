@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<div class="text-success">hello</div>
+<script src="./node_modules/angular/angular.js"></script>
+<script>
+    //1.动态创建script标签 告诉后台  当前全局下 哪个函数是要被执行的
+   /* function cb(data) {
+        console.log(data);
+    }
+    var script = document.createElement('script');
+    script.src = 'http://localhost:8080/jsonp?callback=cb';
+    document.body.appendChild(script);*/
+    var app = angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope','$http','$sce',function ($scope,$http,$sce) {
+        //$http angular提供的ajax  63342 -> 8080端口 跨域
+        //jsonpCallbackParam 指定的就是?callback=cb callback是不是叫callback
+        /*$http.jsonp($sce.trustAsResourceUrl('http://localhost:8080/jsonp'),{jsonpCallbackParam:'callback'}).then(function (data) {
+            console.log(data);
+        });*/
+        // RESTful  只根据方法区分对数据进行什么操作 /books(/3)?
+        // get    /books
+        // get    /books/1
+        // put    /books
+        // delete /books
+        // delete /books/1
+        // post   /books
+
+        /*$http.get('/getUser').then(function (data) {
+            console.log(data);
+        });
+        $http.get('/getUserOne').then(function (data) {
+            console.log(data);
+        });
+        $http.delete('/delUser').then(function (data) {
+            
+        });
+        $http.delete('/delUserOne').then(function (data) {
+
+        });
+        $http.put('/updateUser').then(function (data) {
+            
+        });
+        $http.post('/addUser').then(function (data) {
+            
+        })*/
+    }]);
+</script>
+</body>
+</html>

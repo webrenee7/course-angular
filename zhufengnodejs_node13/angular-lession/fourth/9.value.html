@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>服务</title>
+</head>
+<body>
+<div ng-controller="firstCtrl"></div>
+<div ng-controller="secondCtrl"></div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    /*app.factory('Calc',function () {
+        this.currency = '$';
+        return {
+            "+": (a,b)=>this.currency+(a+b)
+        }
+    });*/
+    app.constant('Calc',{
+        "+": (a,b)=>a+b
+    });//value声明的对象 会被包装一个函数 发给factory
+
+    //value是通过factory构造出来的 value调用的是factory
+    app.controller('firstCtrl',function ($scope,Calc) {
+        $scope.sum = Calc["+"](1,2);
+    });
+    app.controller('secondCtrl',function ($scope,Calc) {
+        $scope.sum = Calc["+"](5,6);
+    });
+</script>
+</body>
+</html>

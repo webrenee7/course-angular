@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<input type="text" ng-model="query">
+<table class="table table-bordered table-hover">
+    <tr class="text-success">
+        <th>姓名</th>
+        <th>数学</th>
+        <th>语文</th>
+        <th>英语</th>
+    </tr>
+    <!--100   <span style="color:red">1</span>00-->
+    <!--根据某一项中的math属性进行排序  是否倒序-->
+    <tr ng-repeat="arr in arrs">
+        <td>{{arr.name}}</td>
+        <td ng-bind-html="arr.math | colorRed:query | trustAsHtml"></td>
+        <td ng-bind-html="arr.chinese | colorRed:query | trustAsHtml"></td>
+        <td ng-bind-html="arr.english | colorRed:query | trustAsHtml"></td>
+    </tr>
+</table>
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('appModule', []);
+    //识别html代码(抽离公用方法)
+    app.filter('trustAsHtml',function ($sce) {
+        return function (input) {
+            //就是将内容编译成html 并且内容必须是字符串类型的
+            return $sce.trustAsHtml(input.toString());
+        }
+    });
+    app.filter('colorRed', function ($sce) {
+        return function (input, query) {
+            //判断query存不存在
+            if (typeof query != 'undefined') {
+                //创建一个匹配的正则
+                var reg = new RegExp(query);
+                //根据正则特换成想要的<span>1</span>00
+                return input.toString().replace(reg, function () {
+                    return `<span style="color: red">${arguments[0]}</span>`;
+                });
+            } else {
+                return input;
+            }
+        }
+    });
+    /*app.filter('colorRed', function ($sce) {
+        return function (input, query) {
+            //判断query存不存在
+            if (typeof query != 'undefined') {
+                //创建一个匹配的正则
+                var reg = new RegExp(query);
+                //根据正则特换成想要的<span>1</span>00
+                return $sce.trustAsHtml(input.toString().replace(reg, function () {
+                    return `<span style="color: red">${arguments[0]}</span>`
+                }));
+            } else {
+                return $sce.trustAsHtml(input.toString());
+            }
+        }
+    });*/
+    app.controller('myCtrl', ['$scope', '$sce', function ($scope, $sce) {
+        $scope.arrs = [{name: '张三', chinese: 100, math: 90, english: 66}, {
+            name: '李四',
+            chinese: 65,
+            math: 78,
+            english: 88
+        }, {name: '王五', chinese: 20, math: 80, english: 34}, {name: '赵六', chinese: 30, math: 100, english: 108}];
+        $scope.str = $sce.trustAsHtml('<h1>hello</h1>');
+    }]);
+</script>
+</body>
+</html>

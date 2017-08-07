@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>服务</title>
+</head>
+<body>
+<!--angular中给我们提供了内置的服务 $http $sce $timeout $interval...
+    服务是将公有方法抽离出来的
+    特点 1. 公有 单例的,我们使用的时候 需要他注入进来就可以
+    内置的服务 自定义的服务
+-->
+<div ng-controller="firstCtrl"></div>
+<div ng-controller="secondCtrl"></div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    app.config(function (CalcProvider) {
+        //CalcProvider代表的是Calc服务声明的function的实例
+        CalcProvider.currency = '￥'; //一定是当provider实例化后才会将currency属性改写
+    });
+    //写代码时 尽量不操作全局作用域
+    /*app.run(function ($rootScope) {
+        $rootScope.sum = function (a,b) {
+            return a+b;
+        }
+    })*/
+    //定义服务 provider "factory" service value constant 他们之间的区别
+    //1.param1服务的名字 2.服务的定义
+    app.provider('Calc',function () { //angular会先将Provider函数实例化new这个函数
+        this.currency = '$';
+        this.$get = function () {
+            return {
+                //箭头函数的this指向上一级也就是this.$get中的this
+                "+": (a,b)=>this.currency+(a+b)
+            }
+        }
+    });
+    //provider 1.是最大的服务 2.是一个唯一可配置的服务
+    //Calc在控制器中使用 默认的就是调用provider中的$get方法
+    app.controller('firstCtrl',function ($scope,Calc) {
+        //Calc代表的是this.$get的返回值
+        $scope.sum = Calc["+"](1,2);//+法中的this指向问题，谁调用+法this就是谁 => this.$get的返回值
+    });
+    app.controller('secondCtrl',function ($scope,Calc) {
+        $scope.sum = Calc["+"](5,6);
+    });
+</script>
+</body>
+</html>

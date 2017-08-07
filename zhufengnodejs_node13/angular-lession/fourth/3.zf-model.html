@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body>
+<input type="text" zf-model="age">
+{{age}}
+<input type="text" zf-model="name">
+{{name}}
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    app.run(function ($rootScope,$interval) {
+        $rootScope.name = 100;
+        $rootScope.age = 250;
+        $interval(function () {
+            $rootScope.age++
+        },1000);
+    });
+    app.directive('zfModel',function () {
+        return {
+            link:function (scope,element,attrs) {
+                console.log(attrs.zfModel);//取zfModel对应的值是name/age
+                //1.更改视图里的内容，要更改作用域上的数据 v-m
+                //jquery中的change是失去焦点触发
+                element.on('input',function () {
+                    scope[attrs.zfModel] = element.val();
+                    //原生js 不会自动通知视图刷新
+                    scope.$apply();
+                });
+                //2.如果数据变化，要将内容绑定到视图上 m-v
+                scope.$watch(attrs.zfModel,function (newVal,oldVal) {
+                    element.val(newVal);
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

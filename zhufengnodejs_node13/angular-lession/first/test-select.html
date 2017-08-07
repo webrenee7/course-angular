@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<!--option中间的值是展示给用户看的  value是给我们前端看的-->
+<select onchange="fn.call(this)">
+    <option value="1">1折</option>
+    <option value="2">5折</option>
+</select>
+<script>
+    function fn() {
+        alert(this.value);
+    }
+</script>
+</body>
+</html>

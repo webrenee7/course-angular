@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body ng-controller="myCtrl">
+<div ng-bind="'welcome to beijing' | toupper">123</div>
+<div ng-bind-html="h1 |asHtml"></div>
+<div>{{33323421232322|mydate}}</div>
+<div>{{150|mycurrency:'$':'*'}}</div>
+<script src="../node_modules/angular/angular.js"></script>
+<script>
+    var app=angular.module('appModule',[]);
+    //声明一个过滤器，用来实现单词首字母大写
+    app.filter('toupper',function () {
+        return function (data) {//data指的就是要过滤的对象
+            return data.replace(/^\w|\s\w/g,function () {
+                //返回的结果会成为最终的结果
+                return arguments[0].toUpperCase();
+            });
+            //welcome to beijing===>Welcome To Beijing
+        }
+    });
+    //asHtml
+    app.controller('myCtrl',function ($scope) {
+        $scope.h1='<h1>hello world!</h1>'
+    });
+    app.filter('asHtml',function ($sce) {
+        return function (data) {
+            return $sce.trustAsHtml(data);
+        };
+    });
+    //mydate
+    app.filter('mydate',function () {
+        return function (data) {
+            var d=new Date(data);
+            return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+        }
+    });
+    //currency  内置过滤器只能传递一个参数，我们自己定义的可以传递两个参数
+    app.filter('mycurrency',function () {
+        return function (data,param1,param2) {
+            if(typeof param1=="undefined"){
+                return 'xy'+data;
+            }else{
+                return param1+data+param2;
+            }
+        }
+    })
+</script>
+</body>
+</html>

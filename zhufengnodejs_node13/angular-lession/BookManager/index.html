@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="cartCtrl">
+<table class="table table-bordered">
+    <tr>
+        <th>书名</th>
+        <th>价格</th>
+        <th>操作</th>
+    </tr>
+    <tr ng-repeat="book in books track by $index">
+        <td>{{book.name}}</td>
+        <td>{{book.price}}</td>
+        <td><button class="btn btn-danger" ng-click="remove(book)">删除</button></td>
+    </tr>
+</table>
+<form role="form">
+    <div class="form-group">
+        <label for="bookName" class="control-label">书名</label>
+        <input type="text" class="form-control" placeholder="请输入书名" id="bookName" ng-model="book.name">
+    </div>
+    <div class="form-group">
+        <label for="bookPrice" class="control-label">价格</label>
+        <input type="text" class="form-control" placeholder="请输入价格" id="bookPrice" ng-model="book.price">
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary" ng-click="sub()">提交</button>
+    </div>
+</form>
+
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/angular-resource/angular-resource.js"></script>
+<script>
+    var app = angular.module('appModule',['ngResource']);
+    app.factory('Books',['$resource',function ($resource) {
+        return $resource('/book/:id',null,{
+            update:{
+                method:'PUT'
+            }
+        });
+    }]);
+    app.controller('cartCtrl',['$scope','Books',function ($scope,Books) {
+        $scope.sub = function () {
+            Books.save($scope.book).$promise.then(function (res) {
+                $scope.books.push(res);
+                $scope.book = {};//将输入框内容清空
+            });
+        };
+        $scope.books = Books.query();
+        $scope.remove = function (book) {
+            //调用get save query 可以通过.$promise拿到promise对象可以调用then方法
+            Books.remove({id:book.id}).$promise.then(function () {
+                //后台删除成功后 删除前端的数据
+                $scope.books = $scope.books.filter(function (item) {
+                    return item.id != book.id
+                });
+            });
+            //作业：Books.save() 当完成后在$scope.books push新增加的内容即可
+        };
+        //RESTful
+        //查询 后台返回查询内容
+        //删除 后台返回空对象
+        //修改 返回修改的那一项
+        //添加 返回添加的那一项
+
+        //将返回的结果挂在作用域上
+        /*;*/
+    }]);
+</script>
+</body>
+</html>

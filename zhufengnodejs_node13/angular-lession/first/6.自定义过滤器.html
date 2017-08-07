@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body>
+{{'hello' | capitalize:'1':'3'}}
+{{'welcome to bei-jing, mis wang' | toupper}}
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('zfModule',[]);
+    //声明过滤器
+    //1.param1 过滤器的名字 2.过滤器的定义
+    app.filter('toupper',function () {
+        return function (input) {
+            // \b\w 但是无法匹配到 bei-jing
+            return input.replace(/^\w|\s\w/g,function () {
+                return arguments[0].toUpperCase();
+            });
+            //return 'Welcome To Beijing, Mis Wang'
+        }
+    });
+    app.filter('capitalize',function () {
+        return function (input,param1,param2) {
+            //返回的结果会成为最终的效果
+            return input.slice(0,param1)+input.slice(param1,param2).toUpperCase()+input.slice(param2);
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>服务</title>
+</head>
+<body>
+<div ng-controller="myCtrl"></div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+// 写项目  controller filter service directive app.js
+    var app = angular.module('appModule',[]);
+    // provider config run controller
+    app.run(function ($rootScope,Note) {
+        $rootScope.school ={name:'zfpx',age:8};
+    });
+    app.config(function (NoteProvider) {
+        NoteProvider.aa = 2;
+    });
+    app.provider('Note',function () {
+        this.aa = 1;
+        this.$get = function () {
+            return {
+                setStorage: (key,value)=>{
+                    if(typeof value =='object'){
+                        value = JSON.stringify(value);
+                    }
+                    localStorage.setItem(key,value);
+                },
+                getStorage: (key)=>{
+                    var temp = localStorage.getItem(key)
+                    try {
+                        temp = JSON.parse(temp);
+                    }catch(e){}
+                    return temp;
+                }
+            }
+        }
+    });
+    app.controller('myCtrl',function ($scope,Note) {
+        $scope.h ={name:'jw',age:18};
+        Note.setStorage('l',1)
+    });
+
+    //跨页面存储 cookie 4k  localStorage 一直存储 sessionStorage 浏览器关掉就不存在了
+</script>
+</body>
+</html>

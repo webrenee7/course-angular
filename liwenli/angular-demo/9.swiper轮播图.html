@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>swiper</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            margin: 10px auto;
+            border: 1px solid red;
+            box-shadow: 3px 3px 5px #FF4933;
+            overflow: hidden;
+        }
+
+        .slider-scroll {
+            position: absolute;
+            left: 0;
+            top: 0;
+            -webkit-transition: left 1s ease-out;
+            -moz-transition: left 1s ease-out;
+            -ms-transition: left 1s ease-out;
+            -o-transition: left 1s ease-out;
+            transition: left 1s ease-out;
+            /*width: 2000px;*/
+            height: 100%;
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .slider-scroll li {
+            float: left;
+        }
+
+        .slider-scroll li img {
+            width: 500px;
+            height: 300px;
+        }
+
+        .slider-switch {
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            -webkit-transform: translate(0, -50%);
+            -moz-transform: translate(0, -50%);
+            -ms-transform: translate(0, -50%);
+            -o-transform: translate(0, -50%);
+            transform: translate(0, -50%);
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .slider-switch a {
+            width: 40px;
+            height: 30px;
+            line-height: 30px;
+            text-decoration: none;
+            color: black;
+            float: left;
+            text-align: center;
+            background-color: #2aabd2;
+            opacity: .4;
+            filter: alpha(opacity:40);
+        }
+
+        .slider-switch a:nth-child(2) {
+            float: right;
+        }
+
+        .slider-switch a:hover {
+            opacity: 1;
+        }
+        .slider-focus {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            /*background-color: red;*/
+        }
+        .slider-focus li {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            background-color: #2aabd2;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div ng-controller="appCtrl">
+    <div swiper images="images" interval="3000" fn="fn(param)"></div>
+    <!--<swiper></swiper>-->
+    <div swiper images="images" interval="2000" fn="fn(param)"></div>
+    <div swiper images="images" interval="4000" fn="fn(param)"></div>
+    <!--<swiper images="images"></swiper>-->
+    <!-- directive:swiper -->
+    <div class="swiper"></div>
+
+</div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script type="text/javascript">
+    var app = angular.module('appModule', []); // 定义一个angular模块
+    app.controller('appCtrl', function ($scope) { // 定义一个控制器
+        $scope.images = ['./images/1.png', './images/2.jpg', './images/3.jpg'];
+        $scope.images.push($scope.images[0]);
+        $scope.fn =function (val){
+            alert(val)
+        }
+    });
+    app.directive('swiper', function ($interval, $timeout) {
+        return {
+            restrict: 'AE', // 限制指令使用范围 A attr属性  E element元素  M commont C
+//            replace: true, // 将指令所在的容器替换掉
+//            ng-click="fn({param:'liwenli'})"
+            template: `
+                    <div  class="slider-container" ng-mouseover="pauseScroll()" ng-mouseleave="payScroll()">
+                     <ul class="slider-scroll" ng-style="swipeStyle"><li ng-repeat="img in images track by $index"><img ng-src="{{img}}" alt="图片"></li></ul>
+                     <div ng-show="isShow" class="slider-switch"><a ng-click="changeSlider('left')" href="javascript:;">Left</a><a ng-click="changeSlider()"href="javascript:;">Right</a></div>
+                     <ul class="slider-focus"><li ng-click="focusClick($index)" ng-repeat="val in images track by $index" ng-if="!$last">{{$index+1}}</li></ul>
+                    </div>
+                  `,
+            /**
+             *
+             * @param scope  当前指令所在的作用域
+             * @param element 当前指令所在的元素（jq对象）
+             * @param attrs  当前指令所在元素的属性集合
+             */
+            link: function (scope, element, attrs) { // 链接模板和scope 模板中的变量 scope上属性替换掉
+                var imgLeng = scope.images.length;  // 图片个数
+                var wid = 500;  // 默认宽度
+                var scrollWid = imgLeng * 500 + 'px'; // 动态计算图片滚动区域宽度
+                scope.swipeStyle = {   // 滚动容器样式
+                    width: scrollWid,
+                    left: 0,
+                    webkitTransitionDuration: '1s'
+                };
+                var count = 0; // 记录当前图片第几个
+                // 设置图片偏移值
+                function autoMove() {
+                    scope.swipeStyle.webkitTransitionDuration = '1s';
+                    if (count == imgLeng - 1) {
+                        scope.timer = $timeout(function () {
+                            count = 0;
+                            scope.swipeStyle.webkitTransitionDuration = '0s';
+                            scope.swipeStyle.left = '0px';
+                            $timeout.cancel(scope.timer);
+                        }, 1000)
+                    }
+                    scope.swipeStyle.left = -count * wid + 'px';
+                }
+                // 自动轮播
+                function moveInter() {
+                    scope.moveInter = $interval(function () {
+                        count++;
+                        autoMove();
+                    }, scope.interval);
+                }
+                moveInter();
+                // 鼠标滑入暂停
+                scope.pauseScroll = function () {
+                    scope.isShow = true;
+                    $interval.cancel(scope.moveInter);
+                };
+                // 鼠标滑出开启轮播
+                scope.payScroll = function () {
+                    scope.isShow = false;
+                    moveInter()
+                };
+                // 左右切换图片
+                scope.changeSlider = function (left) {
+                    left ? count++ : count--;
+                    if (count == -1) {
+                        scope.swipeStyle.webkitTransitionDuration = '0s';
+                        scope.swipeStyle.left = -(imgLeng - 1) * wid + 'px'; // *注意autoMove中left偏移会将其覆盖 所以异步
+                        scope.timer = $timeout(function () {
+                            count = imgLeng - 2;
+                            autoMove();
+                            $timeout.cancel(scope.timer);
+                        }, 0);
+                        return;
+                    }
+                    autoMove();
+                };
+                // 焦点切换
+                scope.focusClick = function (ind) {
+                    count = ind;
+                    autoMove();
+                }
+            },
+            scope: {
+                images: '=images',// 传递进来 双向
+                interval: '@' //  单向
+//                fn: '&'
+            }
+        }
+    });
+</script>
+</body>
+</html>

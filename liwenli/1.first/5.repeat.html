@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        [ng-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body ng-cloak>
+<div ng-controller="appCtrl">
+    {{data}}
+    <!-- ng-repeat -->
+    <!--<ul>-->
+    <!--<li ng-repeat=" (ind,item) in data ">{{item}}{{ind}}</li>-->
+    <!--<li ng-repeat=" item in data ">{{item}}索引{{$index}}第一个{{$first}}最后一个{{$last}}中间{{$middle}}奇数{{$odd}}偶数{{$even}}</li>-->
+    <!--</ul>-->
+    <!--<ul>-->
+    <!--<li ng-repeat="item in obj"> name is {{item.name}} 详细地址 {{item.address}} 门牌号 {{item.num}} </li>-->
+    <!--</ul>-->
+    <ul>
+        <!-- item（object）是遍历出来的每一项  通过obj.key-->
+        <li ng-repeat="item in obj">
+            <span>{{item.name}}</span>
+            <span>{{item.address}}</span>
+            <span>{{item.num}}</span>
+        </li>
+    </ul>
+    <div >
+        <span ng-repeat="(val,key) in resultText">{{key}}:{{val}}<br></span>
+    </div>
+</div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+
+    var app = angular.module('appModule', []);
+    //  angular.module('appModule');
+    //  定义一个 controller （控制器）产生一个作用域  自带$scope
+    app.controller("appCtrl", function ($scope, $timeout) {
+        $scope.name = 'angular';
+//  $scope.data = [1,2,3,4,5,6];
+//  $scope.obj =[{name:'zhufen',address:'回龙观东大街',num: 123}];
+
+    $scope.obj = [
+            {name: 'zhufen', address: '回龙观东大街', num: 123},
+            {name: 'angular', address: '回龙观东大街', num: 333},
+            {name: 'react', address: '回龙观东大街', num: 333},
+            {name: 'vue', address: '回龙观东大街', num: 333}
+        ];
+        $scope.resultText = {name: 'angularJs', age: '10', say: 'hello world'}
+    });
+
+</script>
+</body>
+</html>

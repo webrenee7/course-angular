@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!-- 代表angular管理范围-->
+<html ng-app>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+      <style>
+          [ng-cloak] {
+              display: none;
+          }
+      </style>
+  </head>
+  <body>
+    <!-- angularjs  -->
+    <div ng-cloak>
+      <h3>angularJs计算器 写法</h3>
+       <!-- 计算器 -->
+      <input type="text" ng-model="first">
+      <select ng-model="opera" ng-init="opera='+'">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select>
+      <input type="text" ng-model="second">=
+
+      <!-- ng-if 方式一 -->
+      <span ng-if="opera == '+'">{{+first + second}}</span>
+      <span ng-if="opera == '-'">{{first - second}}</span>
+      <span ng-if="opera == '*'">{{first * second}}</span>
+      <span ng-if="opera == '/'">{{first / second}}</span>
+
+      <!-- ng-show 方式二  -->
+      <!-- <span ng-show="opera=='+'">{{+first + +second}}</span>
+      <span ng-show="opera=='-'">{{first - second}}</span>
+      <span ng-show="opera=='*'">{{first * second}}</span>
+      <span ng-show="opera=='/'">{{first / second}}</span> -->
+
+      <!-- ng-hide 方式三 -->
+      <!-- <span ng-hide="!(opera == '+')">{{+first + +second}}</span>
+      <span ng-hide="!(opera == '-')">{{first - second}}</span>
+      <span ng-hide="!(opera == '*')">{{first * second}}</span>
+      <span ng-hide="!(opera == '/')">{{first / second}}</span> -->
+
+
+
+      <!-- ng-switch 方式四 -->
+      <!-- <span ng-switch="opera">
+        <span ng-switch-when="+">{{+first + +second}}</span>
+        <span ng-switch-when="-">{{first - second}}</span>
+        <span ng-switch-when="*">{{first * second}}</span>
+        <span ng-switch-default="/">{{first / second}}</span>
+      </span> -->
+
+    </div>
+
+    <!-- 原生js:  -->
+    <div >
+       <h3>原生js计算器 写法</h3>
+        <!-- 计算器 -->
+       <input type="text" id="first">
+       <select id='operator'>
+         <option value="+">+</option>
+         <option value="-">-</option>
+         <option value="*">*</option>
+         <option value="/">/</option>
+       </select>
+       <input type="text" id="second"> <button type="button" id="btn">=</button> <span id='result'></span>
+    </div>
+
+
+    <script type="text/javascript" src='../node_modules/angular/angular.js'></script>
+    <script type="text/javascript">
+
+          var $ = function (ele) {
+            return document.querySelector(ele);
+          };
+          var count;
+          var $opera = $('#operator');
+          var $first = $('#first');
+          var $second = $('#second');
+
+          // 计算
+          function computed() {
+            var opera = $opera.value;
+            var val1 = $first.value;
+            var val2 = $second.value;
+            $('#result').innerHTML = eval(+val1 +opera+ +val2);
+          }
+          // 绑定事件
+          $first.oninput = computed;
+          $second.oninput = computed;
+          $opera.oninput = computed;
+          $('#btn').onclick = computed;
+
+    </script>
+  </body>
+</html>

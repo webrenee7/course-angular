@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        [ng-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body ng-cloak>
+<!--rootScope:{{name}} 指定了控制器的控制范围-->
+<div ng-controller="appCtrl">
+    age:{{age}}
+ <div ng-controller="ctrlChild">
+     <input type="text" ng-model="name">
+     <!-- 子找父 -->
+     child: {{name}}
+ </div>
+</div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+//    window.age='29';
+//      一切从模块开始
+      var app = angular.module('appModule',[]);
+//       angular.module('appModule');
+
+//      定义一个 controller （控制器）产生一个作用域  自带$scope（viewModel）
+      app.controller("appCtrl",function($scope,$timeout){
+          // 独立 $scope 控制器和所属DOM之间的纽带 $scope上定义的属性和方法 应用在视图上
+          $scope.name= 'angular';
+//          angular提供的定时器 viewModel（$scope.name）改变是可以刷新页面
+//          $timeout(function (){
+//              $scope.name = 'model改变';
+//          },3000)
+
+          // 原生的不能将viewModel($scope.name)的改变同步到视图
+//          setTimeout(function (){
+//              $scope.name = 'model改变';
+//              console.log($scope.name);
+//          },3000)
+
+
+      });
+//    控制器只能子找父 父不能找子 控制器和dom是平行的
+    app.controller("ctrlChild", function ($scope){
+        $scope.age = "30"
+    })
+</script>
+</body>
+</html>

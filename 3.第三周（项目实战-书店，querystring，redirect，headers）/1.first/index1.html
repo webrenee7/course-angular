@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/angular-resource/angular-resource.js"></script><!--提供RESTful风格-->
+<script>
+    var app=angular.module('appModule',['ngResource']);//第二个参数表示依赖别人的模块
+    app.factory('Books',function ($resource/*注入别人的服务*/) {//创建一个服务Books
+        console.dir($resource());
+        return $resource('/books/:cid',null,{
+            update:{
+                method:'PUT',//增加一个修改的方法
+            }
+        });//发起请求  /books/a
+    });
+    app.controller('myCtrl',['$scope','Books',function ($scope,Books) {//将Books这个服务注入进来
+        /*Books.get({cid:1});//books/1
+        Books.query();//books
+        Books.save({name:1});//books/1
+        Books.update({cid:1},{name:1});//books/1
+        Books.delete();//books*/
+
+        //封装增删改查的方法
+//        console.dir(Books);
+        //get  发一个get请求，表示查一个
+        //query  发一个get请求，表示查多个
+        //save  发一个post请求，表示保存
+        //update  发一个put请求，表示修改
+        //delete  发一个delete请求，表示删除
+
+    }]);
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body ng-controller="myCtrl">
+{{aa}}
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule', []);
+    //watch + apply = ng-model;
+    app.controller('myCtrl', function ($scope,$interval,$timeout) {
+        $scope.aa = 100;
+        //数据变化但是视图未刷新，要通知angular去更新视图
+        //angular自带的指令（服务）都可以自动调用$apply方法
+        var timer = $timeout(function () {
+            $scope.aa++;
+            //$scope.$apply();
+        }, 1000);
+        $timeout.cancel(timer);
+        //$interval.cancel(timer);
+    });
+</script>
+</body>
+</html>

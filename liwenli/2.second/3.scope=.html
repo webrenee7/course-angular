@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Scope</title>
+</head>
+<body>
+<!--<div>-->
+    <!--<div>票数{{flag}}</div>-->
+    <!--<button ng-click="flag=flag+1">张温最漂亮</button>-->
+<!--</div>-->
+<!--<div>-->
+    <!--<div>票数{{flagr}}</div>-->
+    <!--<button ng-click="flagr=flagr+1">刘崇最美</button>-->
+<!--</div>-->
+<!--<div>-->
+    <!--<div>票数{{flage}}</div>-->
+    <!--<button ng-click="flage=flage+1">叱干晓娣最漂亮</button>-->
+<!--</div>-->
+
+<zf-div name="count1"></zf-div>
+<div zf-div name="count2"></div>
+<div class="zf-div" name="count3"></div>
+ <!-- 独立可复用 -->
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script type="text/javascript">
+    var app = angular.module('appModule', []);
+    app.run(function ($rootScope){ // angular应用初始加载程序后 最先执行的
+        $rootScope.count1 = 3;
+        $rootScope.count2 = 4;
+        $rootScope.count3 = 5;
+    });
+//    指令不依赖控制器
+    app.directive('zfDiv', function () {
+//        指令默认不产生作用域
+          return {
+               restrict: 'EAMC',
+               template:'<div><div>票数：{{name}}</div><button ng-click="name=name*1+1">点赞</button></div>',
+//               scope: true // 独立的作用域 可以继承上级属性
+              scope:{  //独立的作用域 与外面完全隔离 @ = &
+                  name:'=name' // 传递的是一个变量 双向
+//                  name: '@' // 传递的是个字符串类型的 如果@后面名字和scope属性名一样可省略不写
+
+              }　
+          }
+    })
+</script>
+</body>
+</html>

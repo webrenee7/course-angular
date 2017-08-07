@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="./node_modules/angular/angular.js"></script>
+</head>
+<body ng-controller="myCtrl">
+<script>
+    //jsonp原理
+    //1、动态创建script标签，告诉后台当前全局下哪个函数是要被执行的
+    /*var script=document.createElement('script');
+    script.src="http://localhost/jsonp?callback=cb";
+    document.body.appendChild(script);
+    function cb(data) {
+        console.log(data);
+    }*/
+
+    var app=angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope','$http','$sce',function ($scope,$http,$sce) {
+        $http.jsonp($sce.trustAsResourceUrl('http://localhost/jsonp'),{jsonpCallbackParam:'callback'}).then(function (data) {
+            console.log(data);
+        });
+        /*$http.get('/getUser').then(function (data) {//获取
+            console.log(data);
+        });
+        $http.delete('/delUser').then(function (data) {//删除
+            console.log(data);
+        });
+        $http.put('/updateUser').then(function (data) {//修改
+            console.log(data);
+        });
+        $http.post('/addUser').then(function (data) {//增加
+            console.log(data);
+        });*/
+
+        //RESTful  只根据方法区分对数据进行什么操作  /books
+        //get  /books
+        //get  /books/1  根据方法和传参判断，是获取一个还是多个
+        //put  /books
+        //delete  /books
+        //delete  /books/2
+        //post  /books
+    }]);
+</script>
+</body>
+</html>

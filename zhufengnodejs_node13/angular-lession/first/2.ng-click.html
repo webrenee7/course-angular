@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<div ng-controller="myCtrl">
+    <!--<input type="text" ng-keyup="fn($event)">-->
+    <ul>
+        <!--要循环谁 就在谁的身上写ng-repeat-->
+        <li ng-repeat="(key,val) in obj">{{key}} : {{val}}</li>
+    </ul>
+    <!--有一个输入框 当敲回车 在arr数组中增加新项 并且显示在列表中 -->
+    <!--在ng-model绑定一个不存在的数据 会在当前作用域下声明-->
+    <input type="text" ng-model="fruit" ng-keyup="addFruit($event)">
+    <ul>
+        <li ng-repeat="(key,arr) in arrs track by key">{{arr}}</li>
+    </ul>
+</div>
+<script src="angular.js"></script>
+<script>
+    var app = angular.module('zfModule',[]);
+    app.controller('myCtrl',function ($scope) {
+        $scope.arrs = ['苹果','香蕉','橘子'];
+        $scope.addFruit = function (e) {
+            var code = e.keyCode;
+            if(code==13){
+                var item = $scope.arrs.find(function (item) {
+                    return item==$scope.fruit;//如果这里返回true则会将当前项返回
+                });
+                !item&&$scope.arrs.push($scope.fruit);
+                $scope.fruit = '';
+            }
+        };
+        $scope.obj = {
+            name:'zfpx',
+            age:8,
+            address:"回龙观东大街"
+        };
+//        $scope.fn=function(e){
+//            alert(e.keyCode);
+//        };
+    });
+</script>
+</body>
+</html>

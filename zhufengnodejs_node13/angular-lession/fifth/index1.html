@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body ng-controller="myCtrl">
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/angular-resource/angular-resource.js"></script>
+<script>
+    //[]数组中 是依赖别人的模块
+    var app = angular.module('appModule',['ngResource']);
+    app.factory('Books',function ($resource) {
+        //$resource 是一个函数
+        return $resource('/books/:cid',null,{
+            update:{
+                method:'PUT' //增加一个修改的方法
+            }
+        });//发起请求  /books/1
+    });
+    app.controller('myCtrl',['$scope','Books',function ($scope,Books) {
+        Books.delete({cid:1});// /books/1
+        //封装 增删改查的方法
+        //get  获取一个
+        //save 发一个post请求 表示保存
+        //update 发一个put请求，表示修改
+        //delete 发一个delete请求 ，表示删除
+        //query 发一个get 表示差多个
+    }]);
+</script>
+</body>
+</html>

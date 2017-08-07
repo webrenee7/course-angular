@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body ng-controller="myCtrl">
+<button ng-click="flag=!flag"></button>
+{{'abcd' | uppercase}}
+<div ng-if="flag">
+    <ul>
+        <li>{{name}}</li>
+    </ul>
+</div>
+<button ng-disabled="true">点我啊</button>
+<input type="text" ng-readonly="true" ng-model="name">
+<input type="text" ng-model="user.name">
+<div ng-bind="!user.name?1:2"></div>
+<pre>
+{{'欢迎你来xxx' | limitTo:1}}
+</pre>
+<button ng-click="flag=!flag"></button>
+{{[{name:1},{name:3},{name:2}] | orderBy:'name':flag}}
+<input type="text" ng-model="a" ng-model-options="{debounce:500}">
+{{[{name:1,age:3},{name:3},{name:2}] | filter:{name:a} }}
+<script src="./node_modules/angular/angular.js"></script>
+<script>
+    //创建模块
+    var app = angular.module('zfModule',[]);
+    //run方法中可以放置rootScope一般用来 初始化根作用域的数据
+    app.run(['$rootScope',function ($rootScope) {
+        $rootScope.a = 'http://www.zhufengpeixun.cn'
+    }]);
+    //控制器默认不会执行 需要在标签上增加ng-controller才能执行
+    app.controller('myCtrl',['$scope','$rootScope',function ($scope,$rootScope) {
+        //$scope = vm
+        $scope.name = 'hello'
+    }])
+
+</script>
+</body>
+</html>

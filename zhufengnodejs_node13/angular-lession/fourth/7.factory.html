@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>服务</title>
+</head>
+<body>
+<div ng-controller="firstCtrl"></div>
+<div ng-controller="secondCtrl"></div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    /*app.config(function (CalcProvider) {
+        CalcProvider.currency = '￥'
+    });*/
+    //factory后面放置的是$get函数 ,在config之后执行的会覆盖掉配置
+    app.factory('Calc',function () {
+        this.currency = '$';
+        return {
+            "+": (a,b)=>this.currency+(a+b)
+        }
+    });
+    app.controller('firstCtrl',function ($scope,Calc) {
+        $scope.sum = Calc["+"](1,2);
+    });
+    app.controller('secondCtrl',function ($scope,Calc) {
+        $scope.sum = Calc["+"](5,6);
+    });
+</script>
+</body>
+</html>

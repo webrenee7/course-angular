@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- angular初始启动 ng-app指定angular应用控制范围 产生$rootScope 根作用域-->
+<html ng-app>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>angular</h3>
+ <!--通过 ng-model （只用于表单元素）将input值绑定给name (双向绑定)-->
+<!-- 如果当前作用域没有name 变量 则声明一个 如果有并把值取出来给input  -->
+<div>
+    <input type="text" ng-model="name">
+    <div>{{name}}</div>
+</div>
+<div>
+    <input type="text" ng-model="namer">
+    <div>{{namer}}</div>
+</div>
+
+
+
+<h3> 原生js</h3>
+<input type="text" id="oText">
+<div id="texts"></div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+      var $ = function (name){
+          return document.querySelector(name)
+      };
+     $('#oText').oninput = function (){
+           $('#texts').innerHTML = this.value;
+     }
+
+</script>
+</body>
+</html>

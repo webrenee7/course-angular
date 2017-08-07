@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="zfModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+</head>
+<body>
+<!--
+    框架 angular（被动） 库 react jquery（主动）
+    框架调用我们写好的代码   我们调他的代码
+-->
+<div ng-controller="firstCtrl">
+    <!--{{}}可以取$scope上的数据-->
+    <!--ng-model实现双向数据绑定的 只能放置变量名-->
+    <input type="text" ng-model="name">
+    <!--1.可以三元表达式 2.可以赋值运算 3.运算表达式-->
+    <!--{{name==100?1:name}}-->
+    <!--使用ng-bind可以解决闪烁问题 只适合一个变量-->
+    <div ng-bind="name==100?1:name"></div>
+    <!--防止整段代码闪烁 ng-cloak 让其默认隐藏-->
+    <style>
+        [ng-cloak]{
+            display: none;
+        }
+    </style>
+    <p ng-controller="secondCtrl">{{age}}</p>
+</div>
+<!--
+    1.可以嵌套
+    2.可以继承 子继承父 父不能继承子
+    3.范围与标签平齐
+    4.不要在控制器中操作dom,能不操作dom就不要操作dom
+-->
+<script src="angular.js"></script>
+<script>
+    //1.让angular自己启动 ng-app
+    //1.模块的名字 2.模块的依赖 3.配置
+    //2.一切从模块开始
+    angular.module('zfModule',[])
+    .run(function ($rootScope) {//此时angular初始化完成后就有rootScope,可以在这里声明全局变量
+        $rootScope.name = 100;
+    })
+      //注入想要的内容
+    .controller('firstCtrl',function ($scope) {
+        //$scope就是viewModel 我们将数据要挂载在vm上
+       // $scope.name = 100;
+    })
+    .controller('secondCtrl',function ($scope) {
+        $scope.age = 80;
+    });
+    //在声明一个控制器 里面显示age属性 显示到p标签中
+</script>
+</body>
+</html>

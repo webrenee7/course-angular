@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="UTF-8">
+    <title>通过指令扩展html和表达式绑定数据</title>
+    <style>
+       /** angular运行前只是个属性选择器 防止看到编译前的样子**/
+        [ng-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body ng-cloak>
+<!-- angular运行后将ng-cloak 删除 防止用户看到编译前样子 又继续使用{{}}绑定数据 -->
+<!--ng-model指定一个变量  如果当前作用域有这个name就找到它把它的值取出来给input -->
+<!-- 如果没有则声明一个变量 注意ng-model 指定一个变量  -->
+<input type="text" ng-model="name">
+<input type="text" ng-model="namer">
+    <!--{{name}}-->
+<!--<h3>花括号方式</h3>-->
+<!--<div>{{name}} My name is {{name}}</div>-->
+ <h3>花括号支持的表达式</h3>
+    <div>{{name}} My name is {{name}}</div>
+    <!-- 1.支持三元运算-->
+    <!--{{name? name : '没有值'}} -->
+    <!--2.可以赋值 -->
+    <!--{{name='angular'}}-->
+    <!--3.简单运算-->
+    <!--{{3 * 9}}-->
+    <!--{{name * namer}}-->
+
+<!--<h3>bind</h3>-->
+<!--&lt;!&ndash; 防止用户看到编译前的东西 替换掉容器的值 只能绑定一个&ndash;&gt;-->
+<!--<div ng-bind="name">My name is </div>-->
+    <!--<h3>ng-bind-template绑定多个</h3>-->
+<!--<div ng-bind-template="{{name}}{{namer}}"></div>-->
+<!--</div>-->
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+</body>
+</html>

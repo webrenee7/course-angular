@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .oDiv {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<zf-drag></zf-drag>
+<zf-drag></zf-drag>
+<zf-drag></zf-drag>
+<zf-drag></zf-drag>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script type="text/javascript">
+        var app = angular.module('appModule', []);
+        app.directive('zfDrag', function () {
+            return {
+//                   templateUrl: './panel.html' // 引入外部模板
+                replace: true,
+                template: '<div class="oDiv">我是一个div</div>',
+                link: function (scope, element, attrs) {
+                      element.on('mousedown', function (e) {
+                          var disX = e.pageX - this.offsetLeft;
+                          var disY = e.pageY - this.offsetTop;
+                          angular.element(document).on('mousemove', function (e){
+                              element.css({
+                                  left: e.pageX - disX + 'px',
+                                  top: e.pageY - disY + 'px'
+                              })
+                          });
+                          angular.element(document).on('mouseup', function (){
+                              angular.element(document).off('mousemove');
+                              angular.element(document).off('mouseup');
+                          });
+                          e.preventDefault();
+                      })
+                }
+            }
+        })
+</script>
+</body>
+</html>

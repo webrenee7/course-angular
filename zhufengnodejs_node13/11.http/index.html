@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+<div>
+    最新的服务器的时间 <p id="timer"></p>
+</div>
+<script>
+    var xhr = new XMLHttpRequest();
+    getClock();
+    function getClock() {
+        xhr.open('GET','/clock',true);
+        xhr.onload = function () { //readState = 4 && status ==200
+            document.getElementById('timer').innerHTML = xhr.responseText;
+        };
+        xhr.send();
+    }
+    setInterval(getClock,1000);
+</script>
+</body>
+</html>

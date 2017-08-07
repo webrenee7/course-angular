@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+                                            <!--w是形参对用fn中who这个变量-->
+            <panel t="这是reactJs" qq="name" f="fn(w,n)">这是内容2</panel>
+            <panel t="这是angularjs" qq="name" f="fn(w,n)">这是内容1</panel>
+        </div>
+    </div>
+</div>
+<script src="node_modules/angular/angular.js"></script>
+<script>
+     var app = angular.module('appModule',[]);
+     app.run(function ($rootScope) {
+         $rootScope.name='zfpx';
+         $rootScope.fn = function (who,name) {
+             alert(who);
+             alert(name);
+         }
+     });
+     app.directive('panel',function () {
+         return {
+            restrict:'E',
+            transclude:true,
+            template:'<div>{{title}} {{name}} <button ng-click="fn({w:100,n:name})"></button></div>',
+            scope:{
+                name:'=qq',
+                title:'@t',
+                fn:'&f' //& 可以接收外部作用域传递过来的函数 传递过来的函数 必须是 f="fn()"
+            }
+         }
+     });
+</script>
+</body>
+</html>

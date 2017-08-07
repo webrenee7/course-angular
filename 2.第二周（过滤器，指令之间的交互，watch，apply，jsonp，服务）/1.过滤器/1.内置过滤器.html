@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+过滤器可以使用一个管道字符（|）添加到表达式和指令中。
+-->
+<h3>angularjs中的内置过滤器(8种)</h3>
+<div>1.uppercase/lowercase==>格式化为大写/小写：</div>
+<div>{{'aBcD'|uppercase}}</div>
+<div>{{'aBcD'|lowercase}}</div>
+<div>2.currency==>格式化为货币形式:{{100|currency}}</div>
+<div>3.date==>格式化时间：{{1486267313587|date:'yy年mm月dd日 hh:mm:ss'}}</div>
+<div>4.limitTo==>对象的截取：{{'afdsafds'|limitTo:5}}</div>
+<div>5.number==>将数字格式化为千分符形式，并设置保留几位小数：{{341321|number:5}}</div>
+<div>6.json==>将json对象格式化为json字符串{{{name:'xy',age:123}|json}}</div>
+<div>7.filter==>查询过滤器：</div>
+<div>{{ [{name:'张三',age:12},{name:'李四',age:23}] | filter:{name:'张三'} }}</div>
+<div>{{ [{name:'张三',age:12},{name:'李四',age:23}] | filter:2 }}</div>
+<div>8.orderBy==>排序(true是降序，false是升序,默认是false)：</div>
+<div>{{ [{name:'张三',age:12,score:123},{name:'李四',age:23,score:78}] | orderBy:"score":false}}</div>
+
+<h3>使用filter和orderBy实现表格排序和查询</h3>
+<input type="text" ng-model="query" ng-model-options="{updateOn:'blur',debounce:1000}">
+<!--
+ng-model-options：是angular-1.3新出的一个指令，允许我们控制ng-model何时进行同步，比如：
+updateOn==>当某个事件触发的时候
+debounce==>在指定的防抖动延迟时间之后
+这样视图就会在指定的时间之后同步到模型
+-->
+<div ng-controller="myCtrl">
+    <table>
+        <tr>
+            <th>姓名</th>
+            <th ng-click="language='chinese';flag=!flag">语文</th>
+            <th ng-click="language='english';flag=!flag">英语</th>
+            <th ng-click="language='math';flag=!flag">数学</th>
+        </tr>
+        <tr ng-repeat="student in students | orderBy:language:flag | filter:{name:query} track by $index">
+            <td>{{student.name}}</td>
+            <td>{{student.chinese}}</td>
+            <td>{{student.english}}</td>
+            <td>{{student.math}}</td>
+        </tr>
+    </table>
+</div>
+<script src="../node_modules/angular/angular.js"></script>
+<script>
+    var app=angular.module('appModule',[]);
+    app.controller('myCtrl',['$scope',function ($scope) {
+        $scope.students=[
+            {name:'张三',chinese:67,english:45,math:78},
+            {name:'李四',chinese:98,english:67,math:89},
+            {name:'王五',chinese:65,english:52,math:85}
+        ]
+    }]);
+</script>
+</body>
+</html>

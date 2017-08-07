@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽指令</title>
+     <style type="text/css">
+         .oDiv {
+             position: absolute;
+             left: 0;
+             top: 0;
+             width: 100px;
+             height: 100px;
+             line-height: 100px;
+             text-align: center;
+             background-color: red;
+             border: 1px solid black;
+         }
+     </style>
+</head>
+<body>
+<zf-drag></zf-drag>
+<div zf-drag></div>
+<script type="text/javascript" src="../node_modules/angular/angular.js"></script>
+<script>
+   var app = angular.module('appModule', []);
+//   名字如果是驼峰式命名 使用时 须全部转为小写 中间加个-  如（zf-drag）
+   app.directive('zfDrag', function (){ // 声明指令后默认返回一个对象
+           return {
+               template: '<div class="oDiv" >我是一个模板</div>',
+               replace: true,
+               link: function (scope, element, attrs) {
+                      var winW = document.documentElement.clientWidth || document.body.clientWidth;
+                   var winH = document.documentElement.clientHeight || document.body.clientHeight;
+                   var eleWid = element[0].offsetWidth;
+                   var eleHei = element[0].offsetHeight;
+                      element.on('mousedown', function (e) {
+                          var disX = e.pageX - this.offsetLeft;
+                          var disY = e.pageY - this.offsetTop;
+                          angular.element(document).on('mousemove', function (e){
+                              var moveX = e.pageX - disX;
+                              var moveH = e.pageY - disY;
+                              // 设置边界
+                              if(moveX >= winW-eleWid){
+                                  moveX = winW - eleWid
+                              } else if(moveX < 0) {
+                                  moveX = 0;
+                              }
+                              if(moveH >= winH - eleHei){
+                                  moveH = winH - eleHei
+                              } else if (moveH <= 0) {
+                                  moveH = 0;
+                              }
+                                    element.css({
+                                        left: moveX + 'px',
+                                        top: moveH + 'px'
+                                    })
+                          });
+                          angular.element(document).on('mouseup', function (){
+                              angular.element(document).off('mousemove');
+                              angular.element(document).off('mouseup');
+                          });
+                          e.preventDefault();
+                      });
+               }
+           }
+   })
+</script>
+</body>
+</html>

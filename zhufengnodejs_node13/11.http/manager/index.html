@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        body {
+            font-family: "Microsoft YaHei"
+        }
+    </style>
+</head>
+<body>
+<!--获取用户列表 /getUser-->
+<!--删除用户 /delUser-->
+<!--添加用户 /addUser-->
+<div class="container">
+    <div class="h3 text-success">用户管理页面</div>
+    <form role="form">
+        <div class="form-group">
+            <label for="username" class="control-label">用户名</label>
+            <input type="text" class="form-control" id="username">
+        </div>
+        <div class="form-group">
+            <label for="password" class="control-label">密码</label>
+            <input type="text" class="form-control" id="password">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="add()">添加用户</button>
+        </div>
+    </form>
+    <ul class="list-group">
+
+    </ul>
+</div>
+<script>
+    //1.获取用户列表渲染html
+    function add() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST','/addUser',true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            showList(xhr.response);
+            username.value = password.value = '';
+        };
+        var obj = {name:username.value,password:password.value};
+        xhr.send(JSON.stringify(obj));
+    }
+    var oUl = document.querySelector('.list-group');
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getUser', true);
+    xhr.responseType = 'json';
+    function remove(id) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE','/delUser?id='+id,true);
+        xhr.responseType = 'json'; //设置响应类型为对象类型
+        xhr.onload = function () {
+            showList(xhr.response);
+        };
+        xhr.send();
+    }
+    function showList(lists) {
+        var str = '';
+        lists.forEach(function (item) {
+            str += `<li class="list-group-item" style="overflow: hidden;line-height:34.67px;">
+            用户名：${item.name}  密码　：${item.password}
+             <button class="btn btn-danger pull-right" onclick="remove(${item.id})">删除</button>
+            </li>`;
+        });
+        oUl.innerHTML = str;
+    }
+    xhr.onload = function () {
+        showList(xhr.response);
+    };
+    xhr.send();
+</script>
+<!--服务器端没有../的路径-->
+<!--mime  bootstrap-->
+</body>
+</html>

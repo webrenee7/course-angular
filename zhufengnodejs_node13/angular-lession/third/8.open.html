@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="appModule">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训http://www.zhufengpeixun.cn</title>
+    <style>
+        .title{width: 300px;height: 50px;background: orangered}
+        .content{width: 300px;height: 200px;background: #e4e4e4}
+    </style>
+</head>
+<body>
+<div style="width: 300px;float: left">
+    <group>
+        <opener title="section1">content1</opener>
+        <opener title="section2">content2</opener>
+        <opener title="section3">content3</opener>
+    </group>
+</div>
+
+<script src="node_modules/angular/angular.js"></script>
+<script>
+    var app = angular.module('appModule',[]);
+    //平级的指令 不能实现交互
+    app.directive('group',function () {
+        return {
+            controller:function ($scope) {
+                //收集儿子的作用域
+                $scope.arr = [];
+                this.collect = function (s) {
+                    $scope.arr.push(s);
+                };
+                this.tell = function (s) {//s是当前点击的作用域
+                    $scope.arr.forEach(function (item) {
+                        if(item!=s){
+                            item.flag = false;
+                        }
+                    });
+                }
+            }
+        }
+    });
+    app.directive('opener',function () {
+        return {
+            require:'^?group',
+            templateUrl:'tmpl/open.html',
+            transclude:true,
+            link:function (scope,element,attrs,groupCtrl) {
+                scope.flag = false;
+                groupCtrl.collect(scope);
+                scope.toggle = function () {
+                    //1.取反自己的显示隐藏
+                    scope.flag = !scope.flag;
+                    //2. 告诉父亲除了我其他人都关掉
+                    groupCtrl.tell(scope);
+                }
+            },
+            scope:{
+                title:'@',
+            }
+        }
+    })
+</script>
+</body>
+</html>
